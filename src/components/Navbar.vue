@@ -1,19 +1,54 @@
 <template>
   <div class="greetings">
     <contacts />
-    <button @click="openModal">Записаться на сеанс</button>
+    <form @submit.prevent="submitForm">
+      <button @click="openModal">Записаться на сеанс</button>
 
-    <modal :is-open="isModalOpen" @close="closeModal">
-      <!-- Ваша форма записи на сеанс -->
-    </modal>
+      <modal :is-open="isModalOpen" @close="closeModal">
+        <div>
+          <label for="name">Имя:</label>
+          <input type="text" id="name" v-model="name">
+
+          <label for="email">Emailа:</label>
+          <input type="text" id="phone" v-model="phone">
+
+          <button @click="submitForm">Записаться</button>
+          <input v-model="name" type="text" placeholder="Имя">
+          <input v-model="email" type="email" placeholder="Email">
+          <button type="submit">Записаться</button>
+        </div>
+      </modal>
+    </form>
   </div>
 </template>
 
 <script setup>
 import Contacts from '@/components/Contacts.vue';
 import Modal from './Modal.vue';
+import {ref} from "vue";
+import { db } from '@/firebase';
 
-const isModalOpen = ref(false);
+export default {
+  setup() {
+    const name = ref(”);
+    const email = ref(”);
+
+    const submitForm = () => {
+      // Сохранение информации о записи на сеанс массажа в базе данных
+      db.ref('appointments').push(
+          name: name.value,
+          email: email.value,
+          timestamp: Date.now(),
+    );
+
+      // Очистка полей формы
+      name.value = ”;
+      email.value = ”;
+
+      return {
+        name,
+        email,
+        submitForm,};
 
 const openModal = () => {
   isModalOpen.value = true;
@@ -22,6 +57,7 @@ const openModal = () => {
 const closeModal = () => {
   isModalOpen.value = false;
 };
+
 </script>
 
 
